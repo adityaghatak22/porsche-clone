@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3307
--- Generation Time: Apr 05, 2026 at 08:32 AM
+-- Generation Time: Apr 05, 2026 at 09:44 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -45,7 +45,7 @@ INSERT INTO `cars` (`id`, `model_name`, `price`, `image_url`, `description`) VAL
 (3, 'Macan', 86800.00, 'images/macan.jpg', 'Compact SUV performance.'),
 (4, 'Cayenne', 146900.00, 'images/cayenne.jpg', 'Hybrid luxury SUV.'),
 (5, 'Panamera', 110900.00, 'images/panamera.jpg', 'Luxury sports sedan.'),
-(6, '718 Cayman', 74300.00, 'images/718.jpg', 'Mid-engine balance.');
+(6, '718', 74300.00, 'images/718.jpg', 'Mid-engine balance.');
 
 -- --------------------------------------------------------
 

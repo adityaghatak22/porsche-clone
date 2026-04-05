@@ -184,7 +184,7 @@ document.addEventListener('DOMContentLoaded', () => {
             // Crossfade: shrink slightly, swap src, grow back
             carImage.classList.add('changing');
             setTimeout(() => {
-                image.src = `/porsche-clone-php/images/${folder}/${color}.jpg`;
+                carImage.src = `images/${folder}/${file}.jpg`;
                 carImage.alt = carImage.alt.replace(/— \w+$/, `— ${name}`);
                 // Reset filter (no more hue-rotate)
                 carImage.style.filter = 'drop-shadow(0 20px 60px rgba(0,0,0,0.8))';
