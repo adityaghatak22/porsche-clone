@@ -11,7 +11,7 @@ include 'includes/header.php';
         <source src="images/hero.mp4" type="video/mp4">
     </video>
     <div class="hero-content">
-        <p class="hero-eyebrow">Porsche — Est. 1948</p>
+        <p class="hero-eyebrow">Porsche — Est. 1931</p>
         <h1 class="hero-title">DRIVEN<br><span class="dim">BY</span> DREAMS</h1>
         <p class="hero-sub">The future of sports cars.</p>
         <div style="display:flex; gap:2rem; align-items:center; flex-wrap:wrap;">
