@@ -16,6 +16,7 @@ if (session_status() === PHP_SESSION_NONE) {
 
     <!-- MAIN CSS -->
     <link rel="stylesheet" href="css/style.css">
+    
 </head>
 <body>
     <header class="navbar">
