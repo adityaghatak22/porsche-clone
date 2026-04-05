@@ -125,7 +125,6 @@ include 'includes/header.php';
 
 <!-- ══ CTA STRIP ══ -->
 <div class="cta-strip">
-    <span class="cta-strip-label">Configure your Porsche</span>
     <a href="models.php" class="cta-strip-link">
         View All Models
         <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#555" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
