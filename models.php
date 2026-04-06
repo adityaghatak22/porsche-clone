@@ -23,11 +23,21 @@ include 'includes/header.php';
         </div>
         <div class="masthead-right">
             <p class="masthead-tagline">Choose your electrified soul or your track weapon.</p>
-            <div class="search-wrap">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2">
-                    <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
-                </svg>
-                <input type="text" id="car-search" placeholder="Search models…">
+            <div class="models-filters">
+                <div class="search-wrap">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2">
+                        <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+                    </svg>
+                    <input type="text" id="car-search" placeholder="Search models…">
+                </div>
+                <div class="filter-wrap">
+                    <select id="price-filter">
+                        <option value="all">All Prices</option>
+                        <option value="under80">Under $80,000</option>
+                        <option value="80to120">$80,000 - $120,000</option>
+                        <option value="over120">Over $120,000</option>
+                    </select>
+                </div>
             </div>
         </div>
     </div>
@@ -67,55 +77,63 @@ include 'includes/header.php';
 <script>
 document.addEventListener('DOMContentLoaded', () => {
     const searchInput = document.getElementById('car-search');
+    const priceFilter = document.getElementById('price-filter');
     const grid = document.getElementById('models-grid');
     let timeout = null;
 
+    const updateResults = () => {
+        const query = searchInput.value.trim();
+        const price = priceFilter.value;
+        const url = `ajax_search_models.php?q=${encodeURIComponent(query)}&p=${price}`;
+
+        fetch(url)
+            .then(r => r.json())
+            .then(cars => {
+                grid.innerHTML = '';
+                if (cars.length === 0) {
+                    grid.innerHTML = '<p class="no-results">No models found in this price range.</p>';
+                    return;
+                }
+                cars.forEach((car, i) => {
+                    const priceVal = parseFloat(car.price).toLocaleString('en-US', { minimumFractionDigits: 2 });
+                    const num   = String(i + 1).padStart(2, '0');
+                    const card  = document.createElement('div');
+                    card.className = 'car-card';
+                    card.innerHTML = `
+                        <div class="card-image-wrap">
+                            <span class="card-number">${num}</span>
+                            <img src="${car.image_url}" alt="${car.model_name}" loading="lazy">
+                        </div>
+                        <div class="card-body">
+                            <h2 class="card-model-name">${car.model_name}</h2>
+                            <p class="card-description">${car.description || ''}</p>
+                            <div class="card-footer">
+                                <div class="card-price">
+                                    <span>From</span>
+                                    <strong>$${priceVal}</strong>
+                                </div>
+                                <a href="configurator.php?id=${car.id}" class="card-btn">
+                                    Configure
+                                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2">
+                                        <path d="M5 12h14M12 5l7 7-7 7"/>
+                                    </svg>
+                                </a>
+                            </div>
+                        </div>`;
+                    grid.appendChild(card);
+                });
+            })
+            .catch(() => {
+                grid.innerHTML = '<p class="no-results">Error loading results.</p>';
+            });
+    };
+
     searchInput.addEventListener('input', function () {
         if (timeout) clearTimeout(timeout);
-        timeout = setTimeout(() => {
-            const query = this.value.trim();
-            fetch('ajax_search_models.php?q=' + encodeURIComponent(query))
-                .then(r => r.json())
-                .then(cars => {
-                    grid.innerHTML = '';
-                    if (cars.length === 0) {
-                        grid.innerHTML = '<p class="no-results">No models found.</p>';
-                        return;
-                    }
-                    cars.forEach((car, i) => {
-                        const price = parseFloat(car.price).toLocaleString('en-US', { minimumFractionDigits: 2 });
-                        const num   = String(i + 1).padStart(2, '0');
-                        const card  = document.createElement('div');
-                        card.className = 'car-card';
-                        card.innerHTML = `
-                            <div class="card-image-wrap">
-                                <span class="card-number">${num}</span>
-                                <img src="${car.image_url}" alt="${car.model_name}" loading="lazy">
-                            </div>
-                            <div class="card-body">
-                                <h2 class="card-model-name">${car.model_name}</h2>
-                                <p class="card-description">${car.description || ''}</p>
-                                <div class="card-footer">
-                                    <div class="card-price">
-                                        <span>From</span>
-                                        <strong>$${price}</strong>
-                                    </div>
-                                    <a href="configurator.php?id=${car.id}" class="card-btn">
-                                        Configure
-                                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2">
-                                            <path d="M5 12h14M12 5l7 7-7 7"/>
-                                        </svg>
-                                    </a>
-                                </div>
-                            </div>`;
-                        grid.appendChild(card);
-                    });
-                })
-                .catch(() => {
-                    grid.innerHTML = '<p class="no-results">Error loading results.</p>';
-                });
-        }, 300);
+        timeout = setTimeout(updateResults, 300);
     });
+
+    priceFilter.addEventListener('change', updateResults);
 });
 </script>
 

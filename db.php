@@ -7,7 +7,7 @@ $password = '';     // Default XAMPP password is empty
 
 try {
     // Create a new PDO instance (PHP Data Object)
-    $dsn = "mysql:host=$host;port=3307;dbname=$dbname;charset=utf8mb4";
+    $dsn = "mysql:host=$host;port=3306;dbname=$dbname;charset=utf8mb4";
     $pdo = new PDO($dsn, $username, $password);
     
     // Set PDO to throw exceptions on errors so we can catch them easily

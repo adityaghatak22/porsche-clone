@@ -15,6 +15,16 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     // 4. Basic Validation
     if (empty($name) || empty($email) || empty($password)) {
         $error_msg = "All fields are required!";
+    } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        $error_msg = "Please enter a valid email address.";
+    } elseif (strlen($password) < 8) {
+        $error_msg = "Password must be at least 8 characters long.";
+    } elseif (!preg_match('/[A-Z]/', $password)) {
+        $error_msg = "Password must contain at least one uppercase letter.";
+    } elseif (!preg_match('/[0-9]/', $password)) {
+        $error_msg = "Password must contain at least one number.";
+    } elseif (!preg_match('/[^A-Za-z0-9]/', $password)) {
+        $error_msg = "Password must contain at least one special character.";
     } else {
         // 5. Hash the password (CRITICAL for security)
         // Never store plain text passwords!
@@ -62,17 +72,21 @@ include 'includes/header.php';
         <form action="register.php" method="POST" class="auth-form">
             <div class="form-group">
                 <label for="name">Full Name</label>
-                <input type="text" id="name" name="name" placeholder="Ferry Porsche" required>
+                <input type="text" id="name" name="name" placeholder="Ferry Porsche" value="<?php echo isset($_POST['name']) ? htmlspecialchars($_POST['name']) : ''; ?>" required>
             </div>
             
             <div class="form-group">
                 <label for="email">Email Address</label>
-                <input type="email" id="email" name="email" placeholder="owner@porsche.com" required>
+                <input type="email" id="email" name="email" placeholder="owner@porsche.com" value="<?php echo isset($_POST['email']) ? htmlspecialchars($_POST['email']) : ''; ?>" required>
             </div>
+            
 
             <div class="form-group">
                 <label for="password">Password</label>
-                <input type="password" id="password" name="password" placeholder="••••••••" required>
+                <input type="password" id="password" name="password" placeholder="••••••••" required 
+                       pattern="(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^a-zA-Z0-9]).{8,}"
+                       title="Must contain at least one uppercase letter, one lowercase letter, one number, and one special character, and be at least 8 characters long.">
+                <small class="form-text">Must include 8+ characters, uppercase, number, and symbol.</small>
             </div>
 
             <button type="submit" class="btn btn-block">Create Account</button>

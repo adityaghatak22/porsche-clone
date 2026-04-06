@@ -53,6 +53,33 @@ if (session_status() === PHP_SESSION_NONE) {
     </header>
 
     <script>
+        // Navbar auto-hide logic
+        let lastScrollTop = 0;
+        const navbar = document.querySelector('.navbar');
+
+        window.addEventListener('scroll', function() {
+            let scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+            
+            // Background effect
+            if (scrollTop > 50) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+
+            // Hide on scroll down, show on scroll up
+            if (scrollTop > lastScrollTop && scrollTop > 100) {
+                // Scrolling down
+                navbar.classList.add('navbar-hidden');
+            } else {
+                // Scrolling up
+                navbar.classList.remove('navbar-hidden');
+            }
+            
+            // Update lastScrollTop
+            lastScrollTop = scrollTop <= 0 ? 0 : scrollTop; 
+        });
+
         // Close dropdown when clicking outside
         window.onclick = function(event) {
             if (!event.target.closest('.profile-dropdown')) {

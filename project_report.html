@@ -1,0 +1,863 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Project Report – Porsche Clone</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Times+New+Roman&display=swap');
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Times New Roman', Times, serif;
+    font-size: 12pt;
+    color: #000;
+    background: #ccc;
+  }
+
+  .page {
+    width: 210mm;
+    min-height: 297mm;
+    margin: 10mm auto;
+    background: #fff;
+    padding: 20mm 20mm 20mm 25mm;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+    page-break-after: always;
+    position: relative;
+  }
+
+  @media print {
+    body { background: #fff; }
+    .page { margin: 0; box-shadow: none; page-break-after: always; }
+    .no-print { display: none; }
+  }
+
+  /* ─── COVER / FRONT PAGE ─── */
+  .cover-outer {
+    border: 3px double #000;
+    padding: 12mm;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .cover-inner {
+    border: 1.5px solid #000;
+    padding: 10mm;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+  .univ-logo { font-size: 28pt; font-weight: bold; letter-spacing: 4px; margin-bottom: 6mm; }
+  .univ-name { font-size: 16pt; font-weight: bold; margin-bottom: 2mm; }
+  .dept-name  { font-size: 13pt; font-weight: bold; margin-bottom: 8mm; }
+  .cover-divider { width: 100%; border-top: 2px solid #000; margin: 5mm 0; }
+  .cover-label  { font-size: 11pt; letter-spacing: 2px; margin-bottom: 2mm; }
+  .cover-title  { font-size: 20pt; font-weight: bold; margin: 5mm 0; }
+  .cover-subtitle { font-size: 11pt; margin-bottom: 10mm; }
+  .cover-section { font-size: 11pt; font-weight: bold; margin: 2mm 0; }
+  .cover-members { font-size: 12pt; margin-top: 3mm; line-height: 2; }
+
+  /* ─── GENERAL HEADING ─── */
+  .page-title {
+    font-size: 16pt;
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 6mm;
+    padding-bottom: 2mm;
+    border-bottom: 2px solid #000;
+  }
+  .section-heading {
+    font-size: 13pt;
+    font-weight: bold;
+    margin-top: 6mm;
+    margin-bottom: 2mm;
+  }
+  .sub-heading {
+    font-size: 11pt;
+    font-weight: bold;
+    margin-top: 4mm;
+    margin-bottom: 1mm;
+  }
+  p { line-height: 1.7; text-align: justify; margin-bottom: 3mm; }
+  ul, ol { padding-left: 7mm; margin-bottom: 3mm; line-height: 1.7; }
+
+  /* ─── FRONT-PAGE TABLE ─── */
+  .fp-wrap { border: 2px solid #000; }
+  .fp-header {
+    background: #fff;
+    padding: 6mm;
+    text-align: center;
+    border-bottom: 2px solid #000;
+  }
+  .fp-header h1 { font-size: 15pt; }
+  .fp-header h2 { font-size: 13pt; font-weight: bold; }
+  .fp-header h3 { font-size: 12pt; }
+  .fp-row { border-bottom: 1px solid #000; padding: 4mm 6mm; }
+  .fp-row:last-child { border-bottom: none; }
+  .fp-row strong { font-size: 11pt; }
+  .fp-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 3mm 0;
+    font-size: 10.5pt;
+  }
+  .fp-table th, .fp-table td {
+    border: 1px solid #000;
+    padding: 3mm 4mm;
+    vertical-align: top;
+  }
+  .fp-table th { background: #f0f0f0; font-weight: bold; }
+
+  /* ─── SCREENSHOT BOX ─── */
+  .screenshot-box {
+    width: 100%;
+    border: 1.5px solid #000;
+    margin: 4mm 0;
+    display: flex;
+    flex-direction: column;
+  }
+  .screenshot-box .ss-label {
+    background: #e8e8e8;
+    border-bottom: 1px solid #000;
+    padding: 2mm 4mm;
+    font-weight: bold;
+    font-size: 10pt;
+  }
+  .screenshot-box .ss-img {
+    width: 100%;
+    min-height: 60mm;
+    display: block;
+    object-fit: cover;
+  }
+  .screenshot-box .ss-caption {
+    border-top: 1px solid #000;
+    padding: 2mm 4mm;
+    font-size: 9pt;
+    text-align: center;
+    font-style: italic;
+  }
+
+  /* ─── FLOWCHART / TABLE ─── */
+  .flow-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 10.5pt;
+    margin: 3mm 0;
+  }
+  .flow-table th, .flow-table td {
+    border: 1px solid #000;
+    padding: 3mm 4mm;
+    vertical-align: top;
+  }
+  .flow-table th { background: #e0e0e0; text-align: center; font-weight: bold; }
+
+  /* ─── PRINT BUTTON ─── */
+  .print-btn {
+    position: fixed; bottom: 20px; right: 20px;
+    background: #000; color: #fff;
+    padding: 12px 24px; font-size: 14px;
+    border: none; cursor: pointer; border-radius: 4px;
+    font-family: Arial, sans-serif;
+    z-index: 999;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+  }
+  .print-btn:hover { background: #333; }
+
+  .page-num {
+    position: absolute;
+    bottom: 10mm;
+    right: 15mm;
+    font-size: 9pt;
+    color: #555;
+  }
+  .header-rule { border-top: 1.5px solid #000; margin-bottom: 5mm; padding-top: 2mm; font-size: 9pt; color: #555; display: flex; justify-content: space-between; }
+</style>
+</head>
+<body>
+
+<button class="print-btn no-print" onclick="window.print()">🖨️ Print / Save as PDF</button>
+
+<!-- ═══════════════════════════════════════════
+     PAGE 1 — TITLE / FRONT PAGE (per format)
+════════════════════════════════════════════ -->
+<div class="page">
+  <div class="fp-wrap">
+    <div class="fp-header">
+      <h1>Department of Information Technology</h1>
+      <h2>Web Programming Lab Mini Project</h2>
+      <h3>Semester IV &nbsp;:&nbsp; Year 2025-26</h3>
+    </div>
+
+    <div class="fp-row"><strong>Title of the Project :</strong>&nbsp;&nbsp; Porsche – Premium Automotive Web Application</div>
+
+    <div class="fp-row">
+      <strong>Group Members</strong>
+      <table class="fp-table" style="margin-top:3mm;">
+        <thead>
+          <tr>
+            <th>Group No</th>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Phone No.</th>
+            <th>Roll No</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td rowspan="4" style="text-align:center;vertical-align:middle;">G-12</td>
+            <td>Raj</td>
+            <td>raj@student.edu</td>
+            <td>+91__________</td>
+            <td></td>
+          </tr>
+          <tr>
+            <td>Deepansh</td>
+            <td>deepansh@student.edu</td>
+            <td>+91__________</td>
+            <td></td>
+          </tr>
+          <tr>
+            <td>Kapish</td>
+            <td>kapish@student.edu</td>
+            <td>+91__________</td>
+            <td></td>
+          </tr>
+          <tr>
+            <td>Aditya</td>
+            <td>aditya@student.edu</td>
+            <td>+91__________</td>
+            <td></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="fp-row"><strong>Abstract</strong><br>
+      This project is a full-stack, premium automotive showcase and booking web application modelled on the Porsche brand. Built with PHP, MySQL, HTML5, CSS3 and vanilla JavaScript, it enables users to browse the complete model lineup, configure a car in real time, and book test drives — all within a cinematic, black-and-red design language that mirrors Porsche's global digital identity.
+    </div>
+
+    <div class="fp-row"><strong>Keywords</strong><br>
+      PHP, MySQL, PDO, AJAX, HTML5, CSS3, JavaScript, Session Management, Responsive Design, Authentication, CRUD Operations, Automobile Web Application
+    </div>
+
+    <div class="fp-row"><strong>Introduction</strong></div>
+    <div class="fp-row"><strong>Methodology ( System Flow Diagram / Model Design )</strong></div>
+    <div class="fp-row"><strong>Algorithm Details (If any)</strong></div>
+    <div class="fp-row"><strong>Results and Discussion ( Screenshots / Charts / Figures )</strong></div>
+    <div class="fp-row"><strong>Conclusion</strong></div>
+    <div class="fp-row"><strong>References</strong></div>
+    <div class="fp-row"><strong>Other Details if Any</strong></div>
+  </div>
+  <div class="page-num">Page 1</div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════
+     PAGE 2 — TABLE OF CONTENTS
+════════════════════════════════════════════ -->
+<div class="page">
+  <div class="header-rule"><span>Porsche – Premium Automotive Web Application</span><span>Web Programming Lab Mini Project</span></div>
+  <div class="page-title">Table of Contents</div>
+  <table class="flow-table">
+    <thead><tr><th>#</th><th>Section</th><th>Page</th></tr></thead>
+    <tbody>
+      <tr><td>1</td><td>Title / Front Page</td><td>1</td></tr>
+      <tr><td>2</td><td>Table of Contents</td><td>2</td></tr>
+      <tr><td>3</td><td>Abstract</td><td>3</td></tr>
+      <tr><td>4</td><td>Introduction</td><td>4</td></tr>
+      <tr><td>5</td><td>Problem Statement &amp; Objectives</td><td>5</td></tr>
+      <tr><td>6</td><td>Technology Stack</td><td>6</td></tr>
+      <tr><td>7</td><td>System Methodology &amp; Flow Diagram</td><td>7</td></tr>
+      <tr><td>8</td><td>Database Design (ER Diagram &amp; Schema)</td><td>8</td></tr>
+      <tr><td>9</td><td>Algorithm / Implementation Details</td><td>9</td></tr>
+      <tr><td>10</td><td>Results – Home Page &amp; Navigation</td><td>10</td></tr>
+      <tr><td>11</td><td>Results – Models &amp; Price Filter</td><td>11</td></tr>
+      <tr><td>12</td><td>Results – Authentication Pages</td><td>12</td></tr>
+      <tr><td>13</td><td>Results – Configurator</td><td>13</td></tr>
+      <tr><td>14</td><td>Results – Book Test Drive &amp; Maps</td><td>14</td></tr>
+      <tr><td>15</td><td>Conclusion &amp; Future Scope</td><td>15</td></tr>
+      <tr><td>16</td><td>References &amp; Other Details</td><td>16</td></tr>
+    </tbody>
+  </table>
+  <div class="page-num">Page 2</div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════
+     PAGE 3 — ABSTRACT
+════════════════════════════════════════════ -->
+<div class="page">
+  <div class="header-rule"><span>Porsche – Premium Automotive Web Application</span><span>Web Programming Lab Mini Project</span></div>
+  <div class="page-title">Abstract</div>
+
+  <p>
+    The <strong>Porsche Premium Automotive Web Application</strong> is a comprehensive, full-stack mini-project developed as part of the Web Programming Laboratory curriculum for Semester IV. The application replicates the core digital experience of a luxury automotive brand's official website, incorporating user authentication, real-time car configuration, model browsing with price-based filtering, and an integrated test-drive booking system.
+  </p>
+  <p>
+    The back-end is powered by <strong>PHP 8</strong> using <strong>PDO (PHP Data Objects)</strong> for secure, prepared-statement-driven interaction with a <strong>MySQL</strong> relational database. The front-end employs pure <strong>HTML5</strong> semantic markup, <strong>vanilla CSS3</strong> (with custom properties and animations), and <strong>vanilla JavaScript</strong> for AJAX-based dynamic content updates — showcasing that premium UI/UX can be achieved without heavy front-end frameworks.
+  </p>
+  <p>
+    Key features include: a cinematic hero showcase section with scroll-based parallax, a real-time car configurator with exterior colour swatches, a CRUD-enabled test-drive management module, Google Maps integration, a smart international phone-number validator, an auto-hiding navigation bar, and full password/email security validation on all authentication forms.
+  </p>
+  <p>
+    The application successfully demonstrates a production-grade MVC-like file structure, responsive design, session-based access control, and SQL-injection prevention — making it a robust demonstration of modern PHP web development practices.
+  </p>
+
+  <div class="section-heading">Keywords</div>
+  <p>
+    PHP, MySQL, PDO, Prepared Statements, AJAX, HTML5, CSS3, Vanilla JavaScript, Session Management, Responsive Web Design, CRUD, Authentication, Automobile, Configurator, Google Maps API, International Phone Validation.
+  </p>
+  <div class="page-num">Page 3</div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════
+     PAGE 4 — INTRODUCTION
+════════════════════════════════════════════ -->
+<div class="page">
+  <div class="header-rule"><span>Porsche – Premium Automotive Web Application</span><span>Web Programming Lab Mini Project</span></div>
+  <div class="page-title">Introduction</div>
+
+  <p>
+    In today's digital-first world, every major automotive brand invests in interactive online experiences that allow customers to explore vehicles, configure their ideal model, and book services — all without visiting a dealership. Our project is inspired by this real-world use case, taking the globally recognised <strong>Porsche</strong> brand as a model and building a functionally equivalent web application from the ground up.
+  </p>
+  <p>
+    The project was conceived to bridge the gap between academic PHP fundamentals and industry-level web development. Rather than building a generic CRUD application, we designed an experience that is aesthetically compelling, architecturally sound, and feature-rich. The application is served locally via <strong>XAMPP</strong> (Apache + MySQL) and is structured to be deployable on any standard LAMP/WAMP stack with minimal configuration.
+  </p>
+
+  <div class="section-heading">Scope of the Project</div>
+  <p>The project covers the following functional domains:</p>
+  <ul>
+    <li><strong>User Management:</strong> Secure registration with password-complexity enforcement, email-format validation, session-based login and logout.</li>
+    <li><strong>Model Showcase:</strong> Dynamic car listing from a MySQL database, AJAX-powered search with keyword and price-range filters.</li>
+    <li><strong>Car Configurator:</strong> Real-time exterior colour selection with live car image updates; configuration save and retrieval ("My Builds").</li>
+    <li><strong>Test Drive Booking:</strong> Full CRUD for test drive appointments with model selection, international phone validation, location map, and status management.</li>
+    <li><strong>UI/UX:</strong> Cinematic hero sections, auto-hiding navbar, glassmorphism-inspired dark theme, Bebas Neue/Barlow typography, micro-animations.</li>
+  </ul>
+
+  <div class="section-heading">Background</div>
+  <p>
+    Traditional academic PHP projects often focus narrowly on database connectivity. This project deliberately integrates the full stack — from SQL schema design to pixel-perfect CSS — giving all four team members exposure to every layer of a production web application. The project also reinforces software engineering practices such as input sanitisation, error handling, code modularity (PHP includes), and semantic HTML.
+  </p>
+  <div class="page-num">Page 4</div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════
+     PAGE 5 — PROBLEM STATEMENT & OBJECTIVES
+════════════════════════════════════════════ -->
+<div class="page">
+  <div class="header-rule"><span>Porsche – Premium Automotive Web Application</span><span>Web Programming Lab Mini Project</span></div>
+  <div class="page-title">Problem Statement &amp; Objectives</div>
+
+  <div class="section-heading">Problem Statement</div>
+  <p>
+    Automotive companies require sophisticated digital platforms that allow end-users to explore and interact with their products online. Most academic-level web projects, however, are limited to simple login/register systems or basic CRUD boards. There is a clear gap between what students learn in lab exercises and what a real-world commercial web application entails in terms of security, UX, performance, and feature completeness.
+  </p>
+  <p>
+    This project addresses that gap by building a fully functional, multi-page PHP/MySQL web application that simulates the core offerings of a luxury automotive brand's digital portal.
+  </p>
+
+  <div class="section-heading">Objectives</div>
+  <ol>
+    <li>Design and implement a <strong>secure authentication</strong> system with server-side and client-side validation for both email format and password complexity (uppercase, number, symbol).</li>
+    <li>Build a <strong>dynamic model listing</strong> page that uses AJAX to filter cars by search term and price bracket without full page reloads.</li>
+    <li>Develop a <strong>real-time car configurator</strong> that changes the displayed vehicle image based on the user's colour selection and persists the chosen configuration to the database.</li>
+    <li>Implement a <strong>test drive booking system</strong> with complete create / read / update / delete operations, international phone-number validation by country code, and Google Maps integration.</li>
+    <li>Create a visually <strong>premium, responsive UI</strong> with a dark colour palette, professional typography, smooth animations, and an auto-hiding navigation bar.</li>
+    <li>Ensure <strong>data security</strong> through PDO prepared statements on every SQL query, HTML output escaping, and session-based access control.</li>
+  </ol>
+
+  <div class="section-heading">Expected Outcomes</div>
+  <ul>
+    <li>A fully navigable multi-page web application running on a local LAMP/WAMP stack.</li>
+    <li>Complete user registration, login, session management, and logout flows.</li>
+    <li>Dynamic, database-driven car listings with real-time search and price filtering.</li>
+    <li>A working car configurator persisting user selections to the database.</li>
+    <li>A test-drive booking portal with full CRUD and map integration.</li>
+  </ul>
+  <div class="page-num">Page 5</div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════
+     PAGE 6 — TECHNOLOGY STACK
+════════════════════════════════════════════ -->
+<div class="page">
+  <div class="header-rule"><span>Porsche – Premium Automotive Web Application</span><span>Web Programming Lab Mini Project</span></div>
+  <div class="page-title">Technology Stack</div>
+
+  <table class="flow-table">
+    <thead>
+      <tr><th>Layer</th><th>Technology</th><th>Purpose / Usage in Project</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Server-side Language</strong></td>
+        <td>PHP 8</td>
+        <td>Business logic, form handling, session management, database interaction</td>
+      </tr>
+      <tr>
+        <td><strong>Database</strong></td>
+        <td>MySQL 8</td>
+        <td>Persistent storage of users, cars, configurations, test-drive bookings</td>
+      </tr>
+      <tr>
+        <td><strong>Database Abstraction</strong></td>
+        <td>PDO (PHP Data Objects)</td>
+        <td>Prepared statements, SQL injection prevention, error handling</td>
+      </tr>
+      <tr>
+        <td><strong>Web Server</strong></td>
+        <td>Apache (via XAMPP)</td>
+        <td>Serving PHP files locally; rewrite-ready configuration</td>
+      </tr>
+      <tr>
+        <td><strong>Markup</strong></td>
+        <td>HTML5</td>
+        <td>Semantic page structure, accessibility, SEO meta tags</td>
+      </tr>
+      <tr>
+        <td><strong>Styling</strong></td>
+        <td>CSS3 (Vanilla)</td>
+        <td>Dark theme design, animations, transitions, responsive grid/flex layouts</td>
+      </tr>
+      <tr>
+        <td><strong>Scripting</strong></td>
+        <td>Vanilla JavaScript (ES6+)</td>
+        <td>AJAX, DOM manipulation, form validation, navbar scroll behaviour, phone validator</td>
+      </tr>
+      <tr>
+        <td><strong>Fonts</strong></td>
+        <td>Google Fonts (Bebas Neue, Barlow, Inter)</td>
+        <td>Premium automotive typography throughout all pages</td>
+      </tr>
+      <tr>
+        <td><strong>Maps</strong></td>
+        <td>Google Maps Embed API</td>
+        <td>Location display on the Book Test Drive page</td>
+      </tr>
+      <tr>
+        <td><strong>IDE / Tools</strong></td>
+        <td>VS Code + XAMPP Control Panel</td>
+        <td>Development environment; PHP + MySQL served locally</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="section-heading">Project File Structure</div>
+  <table class="flow-table" style="font-size:9.5pt;">
+    <thead><tr><th>File / Folder</th><th>Description</th></tr></thead>
+    <tbody>
+      <tr><td>index.php</td><td>Landing page – hero, showcase slider, CTA</td></tr>
+      <tr><td>models.php</td><td>Car listing with AJAX search + price filter</td></tr>
+      <tr><td>ajax_search_models.php</td><td>JSON AJAX endpoint for search/filter</td></tr>
+      <tr><td>configurator.php</td><td>Real-time car configurator</td></tr>
+      <tr><td>my_builds.php</td><td>Saved configurations per user</td></tr>
+      <tr><td>login.php / register.php</td><td>Auth forms with full validation</td></tr>
+      <tr><td>logout.php</td><td>Session destroy &amp; redirect</td></tr>
+      <tr><td>book_test_drive.php</td><td>Test drive booking form + map</td></tr>
+      <tr><td>manage_test_drives.php</td><td>View all bookings (table)</td></tr>
+      <tr><td>edit_test_drive.php / delete_test_drive.php</td><td>CRUD operations on bookings</td></tr>
+      <tr><td>db.php</td><td>PDO database connection singleton</td></tr>
+      <tr><td>includes/header.php</td><td>Navbar (shared across all pages)</td></tr>
+      <tr><td>includes/footer.php</td><td>Footer (shared across all pages)</td></tr>
+      <tr><td>css/style.css</td><td>Main stylesheet (~630 lines)</td></tr>
+    </tbody>
+  </table>
+  <div class="page-num">Page 6</div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════
+     PAGE 7 — SYSTEM METHODOLOGY / FLOW DIAGRAM
+════════════════════════════════════════════ -->
+<div class="page">
+  <div class="header-rule"><span>Porsche – Premium Automotive Web Application</span><span>Web Programming Lab Mini Project</span></div>
+  <div class="page-title">Methodology &amp; System Flow Diagram</div>
+
+  <div class="section-heading">Application Architecture</div>
+  <p>
+    The application follows a <strong>Server-Side Rendered (SSR) MVC-like pattern</strong> using PHP includes for shared components (header, footer) and dedicated PHP scripts for each feature module. Data flows from the browser to PHP scripts via HTML forms (POST) or AJAX requests (GET), processed server-side, and returned as rendered HTML or JSON.
+  </p>
+
+  <!-- Text-based System Flow Diagram -->
+  <table class="flow-table" style="margin-top:4mm; font-size:10pt; text-align:center;">
+    <thead><tr><th colspan="5">System Flow Diagram</th></tr></thead>
+    <tbody>
+      <tr>
+        <td colspan="5" style="background:#f8f8f8; padding:4mm;"><strong>[ USER BROWSER ]</strong><br>Sends HTTP Request</td>
+      </tr>
+      <tr>
+        <td style="text-align:center;" colspan="5">▼</td>
+      </tr>
+      <tr>
+        <td style="background:#e8f4f8; padding:3mm; width:20%;">GET<br>index.php<br><em>Home Page</em></td>
+        <td style="background:#e8f4f8; padding:3mm; width:20%;">GET<br>models.php<br><em>Car Listing</em></td>
+        <td style="background:#e8f4f8; padding:3mm; width:20%;">POST<br>login.php<br><em>Auth</em></td>
+        <td style="background:#e8f4f8; padding:3mm; width:20%;">GET/POST<br>configurator.php<br><em>Config</em></td>
+        <td style="background:#e8f4f8; padding:3mm; width:20%;">POST<br>book_test_drive.php<br><em>Booking</em></td>
+      </tr>
+      <tr>
+        <td colspan="5" style="text-align:center;">▼</td>
+      </tr>
+      <tr>
+        <td colspan="5" style="background:#fff3cd; padding:4mm;"><strong>[ PHP BUSINESS LOGIC ]</strong><br>Session Check → Input Sanitisation → Validation → PDO Query</td>
+      </tr>
+      <tr>
+        <td colspan="5" style="text-align:center;">▼</td>
+      </tr>
+      <tr>
+        <td colspan="2" style="background:#d4edda; padding:4mm;"><strong>[ MySQL DATABASE ]</strong><br>users · cars · configurations · test_drives</td>
+        <td colspan="3" style="background:#fce8e8; padding:4mm;"><strong>[ AJAX Endpoint ]</strong><br>ajax_search_models.php<br>Returns JSON → JS re-renders grid</td>
+      </tr>
+      <tr>
+        <td colspan="5" style="text-align:center;">▼</td>
+      </tr>
+      <tr>
+        <td colspan="5" style="background:#f8f8f8; padding:4mm;"><strong>[ HTML RESPONSE RENDERED → USER ]</strong><br>Styled with CSS3 + JS animations</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="section-heading">User Journey Flow</div>
+  <p>
+    <strong>Guest User:</strong> Lands on Home → Browses Models (filter/search) → Visits Model Detail → Redirected to Login if trying to Configure or Book.<br>
+    <strong>Registered User:</strong> Logs in → Full access to Configurator, Save Builds, Book Test Drive, Manage / Edit / Cancel bookings.
+  </p>
+  <div class="page-num">Page 7</div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════
+     PAGE 8 — DATABASE DESIGN
+════════════════════════════════════════════ -->
+<div class="page">
+  <div class="header-rule"><span>Porsche – Premium Automotive Web Application</span><span>Web Programming Lab Mini Project</span></div>
+  <div class="page-title">Database Design</div>
+
+  <div class="section-heading">Database: <code>porsche_db</code></div>
+  <p>The application uses four main relational tables:</p>
+
+  <div class="sub-heading">Table 1: users</div>
+  <table class="flow-table" style="font-size:10pt;">
+    <tr><th>Column</th><th>Type</th><th>Constraints</th><th>Description</th></tr>
+    <tr><td>id</td><td>INT</td><td>PK, AUTO_INCREMENT</td><td>Unique user identifier</td></tr>
+    <tr><td>name</td><td>VARCHAR(100)</td><td>NOT NULL</td><td>Full name</td></tr>
+    <tr><td>email</td><td>VARCHAR(150)</td><td>UNIQUE, NOT NULL</td><td>Login email</td></tr>
+    <tr><td>password</td><td>VARCHAR(255)</td><td>NOT NULL</td><td>Bcrypt hashed password</td></tr>
+    <tr><td>created_at</td><td>TIMESTAMP</td><td>DEFAULT NOW()</td><td>Registration timestamp</td></tr>
+  </table>
+
+  <div class="sub-heading">Table 2: cars</div>
+  <table class="flow-table" style="font-size:10pt;">
+    <tr><th>Column</th><th>Type</th><th>Description</th></tr>
+    <tr><td>id</td><td>INT PK</td><td>Unique car identifier</td></tr>
+    <tr><td>model_name</td><td>VARCHAR(100)</td><td>e.g. "911 Carrera"</td></tr>
+    <tr><td>description</td><td>TEXT</td><td>Marketing description</td></tr>
+    <tr><td>price</td><td>DECIMAL(12,2)</td><td>Starting price in USD</td></tr>
+    <tr><td>image_path</td><td>VARCHAR(255)</td><td>Relative path to car image</td></tr>
+  </table>
+
+  <div class="sub-heading">Table 3: configurations</div>
+  <table class="flow-table" style="font-size:10pt;">
+    <tr><th>Column</th><th>Type</th><th>Description</th></tr>
+    <tr><td>id</td><td>INT PK</td><td>Unique configuration ID</td></tr>
+    <tr><td>user_id</td><td>INT FK → users</td><td>Owner of the configuration</td></tr>
+    <tr><td>car_id</td><td>INT FK → cars</td><td>Selected car model</td></tr>
+    <tr><td>color_name</td><td>VARCHAR(50)</td><td>Selected exterior colour</td></tr>
+    <tr><td>color_code</td><td>VARCHAR(10)</td><td>Hex colour code</td></tr>
+    <tr><td>created_at</td><td>TIMESTAMP</td><td>Save timestamp</td></tr>
+  </table>
+
+  <div class="sub-heading">Table 4: test_drives</div>
+  <table class="flow-table" style="font-size:10pt;">
+    <tr><th>Column</th><th>Type</th><th>Description</th></tr>
+    <tr><td>id</td><td>INT PK</td><td>Booking identifier</td></tr>
+    <tr><td>user_id</td><td>INT FK → users</td><td>Booked by user</td></tr>
+    <tr><td>first_name / last_name</td><td>VARCHAR(80)</td><td>Contact name</td></tr>
+    <tr><td>phone</td><td>VARCHAR(20)</td><td>International phone with country code</td></tr>
+    <tr><td>car_model_id</td><td>INT FK → cars</td><td>Requested model</td></tr>
+    <tr><td>preferred_date</td><td>DATE</td><td>Requested test-drive date</td></tr>
+    <tr><td>notes</td><td>TEXT</td><td>Optional additional info</td></tr>
+    <tr><td>created_at</td><td>TIMESTAMP</td><td>Booking timestamp</td></tr>
+  </table>
+  <div class="page-num">Page 8</div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════
+     PAGE 9 — ALGORITHM / IMPLEMENTATION DETAILS
+════════════════════════════════════════════ -->
+<div class="page">
+  <div class="header-rule"><span>Porsche – Premium Automotive Web Application</span><span>Web Programming Lab Mini Project</span></div>
+  <div class="page-title">Algorithm &amp; Implementation Details</div>
+
+  <div class="section-heading">1. Password Validation Algorithm (register.php &amp; login.php)</div>
+  <p>Server-side validation uses PHP's <code>preg_match</code> with four discrete checks:</p>
+  <ul>
+    <li>Length ≥ 8 characters</li>
+    <li>At least one uppercase letter: <code>/[A-Z]/</code></li>
+    <li>At least one digit: <code>/[0-9]/</code></li>
+    <li>At least one special character: <code>/[\W_]/</code></li>
+  </ul>
+  <p>Passwords are stored using PHP's <code>password_hash($pwd, PASSWORD_BCRYPT)</code> and verified with <code>password_verify()</code>. Email format is validated using <code>filter_var($email, FILTER_VALIDATE_EMAIL)</code>.</p>
+
+  <div class="section-heading">2. AJAX Search + Price Filter (ajax_search_models.php)</div>
+  <p>The models page sends a GET request with two parameters — <code>q</code> (keyword) and <code>p</code> (price range). The server builds a dynamic SQL query with <code>WHERE 1=1</code> as a base:</p>
+  <ul>
+    <li>If <code>q</code> is non-empty: appends <code>AND model_name LIKE :q</code> (prepared parameter).</li>
+    <li>If <code>p = "under80"</code>: appends <code>AND price &lt; 80000</code>.</li>
+    <li>If <code>p = "80to120"</code>: appends <code>AND price BETWEEN 80000 AND 120000</code>.</li>
+    <li>If <code>p = "over120"</code>: appends <code>AND price &gt; 120000</code>.</li>
+    <li>Always appended: <code>ORDER BY price ASC</code>.</li>
+  </ul>
+  <p>The result is JSON-encoded and consumed by JavaScript to re-render the grid without a page reload.</p>
+
+  <div class="section-heading">3. International Phone Validation (JavaScript)</div>
+  <p>A country-code map stores the expected subscriber-digit counts for major nations. On every <code>input</code> event:</p>
+  <ol>
+    <li>Check that the value starts with <code>+</code>.</li>
+    <li>Sort known country codes longest-first to avoid prefix collisions (e.g. <code>+971</code> before <code>+9</code>).</li>
+    <li>Match the entered prefix against the map and compute the subscriber digits.</li>
+    <li>Call <code>setCustomValidity()</code> with a descriptive message if the count is wrong; clear it if correct.</li>
+    <li>Unknown prefixes fall back to the ITU range of 7–15 total digits.</li>
+  </ol>
+
+  <div class="section-heading">4. Auto-Hiding Navbar (includes/header.php)</div>
+  <p>A scroll event listener tracks <code>lastScrollTop</code>. If the user scrolls <strong>down</strong> more than 100 px, the CSS class <code>navbar-hidden</code> is added (CSS <code>transform: translateY(-100%)</code>). Scrolling <strong>up</strong> removes the class. A second class <code>scrolled</code> adds a semi-transparent background after 50 px of downward scroll, keeping the navbar readable over all content.</p>
+  <div class="page-num">Page 9</div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════
+     PAGE 10 — RESULTS: HOME PAGE & NAVIGATION
+════════════════════════════════════════════ -->
+<div class="page">
+  <div class="header-rule"><span>Porsche – Premium Automotive Web Application</span><span>Web Programming Lab Mini Project</span></div>
+  <div class="page-title">Results &amp; Discussion – Home Page &amp; Navigation</div>
+
+  <p>The home page (<code>index.php</code>) is the primary entry point. It features a full-viewport hero section with an animated tagline, a parallax fog layer, a horizontal car showcase slider, and a call-to-action section. The navigation bar is fixed, transparent by default, gains a dark background on scroll, and auto-hides when scrolling down.</p>
+
+  <div class="screenshot-box">
+    <div class="ss-label">Figure 1 – Home Page Hero Section</div>
+    <div style="height:90mm; background:#111; display:flex; align-items:center; justify-content:center; color:#444; font-style:italic;">
+      [ Screenshot: index.php – Hero Section ]<br>Open http://localhost/porsche_clone/index.php and paste screenshot here
+    </div>
+    <div class="ss-caption">The cinematic hero section featuring the Porsche wordmark, animated sub-text, and CTA buttons.</div>
+  </div>
+
+  <div class="screenshot-box" style="margin-top:5mm;">
+    <div class="ss-label">Figure 2 – Navigation Bar (Scrolled State)</div>
+    <div style="height:30mm; background:#111; display:flex; align-items:center; justify-content:center; color:#444; font-style:italic;">
+      [ Screenshot: Navbar showing dark background + logged-in user dropdown ]
+    </div>
+    <div class="ss-caption">The navbar after scrolling 50 px — semi-transparent dark background, profile dropdown visible.</div>
+  </div>
+  <div class="page-num">Page 10</div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════
+     PAGE 11 — RESULTS: MODELS & PRICE FILTER
+════════════════════════════════════════════ -->
+<div class="page">
+  <div class="header-rule"><span>Porsche – Premium Automotive Web Application</span><span>Web Programming Lab Mini Project</span></div>
+  <div class="page-title">Results &amp; Discussion – Models Page &amp; Price Filter</div>
+
+  <p>The models page (<code>models.php</code>) displays all cars in a 3-column grid. A search bar and a price-range dropdown are provided. As the user types or selects a price bracket, an AJAX request (GET) is sent to <code>ajax_search_models.php</code>, which returns filtered JSON and the JavaScript rebuilds the grid in real time.</p>
+
+  <div class="screenshot-box">
+    <div class="ss-label">Figure 3 – Models Grid (All Prices)</div>
+    <div style="height:90mm; background:#111; display:flex; align-items:center; justify-content:center; color:#444; font-style:italic;">
+      [ Screenshot: models.php – Full grid of all car cards ]
+    </div>
+    <div class="ss-caption">Full model grid showing car image, name, description, price, and Configure button.</div>
+  </div>
+
+  <div class="screenshot-box" style="margin-top:5mm;">
+    <div class="ss-label">Figure 4 – Models Grid (Price Filter: Under $80,000)</div>
+    <div style="height:45mm; background:#111; display:flex; align-items:center; justify-content:center; color:#444; font-style:italic;">
+      [ Screenshot: models.php – Price filter applied, showing only budget models ]
+    </div>
+    <div class="ss-caption">AJAX-powered price filter showing only models priced under $80,000. No page reload occurs.</div>
+  </div>
+  <div class="page-num">Page 11</div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════
+     PAGE 12 — RESULTS: AUTHENTICATION
+════════════════════════════════════════════ -->
+<div class="page">
+  <div class="header-rule"><span>Porsche – Premium Automotive Web Application</span><span>Web Programming Lab Mini Project</span></div>
+  <div class="page-title">Results &amp; Discussion – Authentication Pages</div>
+
+  <p>Both <code>login.php</code> and <code>register.php</code> feature dark-themed, centered card forms with Porsche red focus highlights. Server-side validation enforces email format and password complexity. Form fields are persisted (populated) if validation fails, so users do not have to retype all data.</p>
+
+  <div class="screenshot-box">
+    <div class="ss-label">Figure 5 – Register Page</div>
+    <div style="height:80mm; background:#111; display:flex; align-items:center; justify-content:center; color:#444; font-style:italic;">
+      [ Screenshot: register.php ]
+    </div>
+    <div class="ss-caption">Registration form with full-name, email, and password fields. Password hint shown below the field.</div>
+  </div>
+
+  <div class="screenshot-box" style="margin-top:5mm;">
+    <div class="ss-label">Figure 6 – Login Page with Validation Error</div>
+    <div style="height:55mm; background:#111; display:flex; align-items:center; justify-content:center; color:#444; font-style:italic;">
+      [ Screenshot: login.php showing error alert for wrong password ]
+    </div>
+    <div class="ss-caption">Red error alert shown when login fails; email field preserved for user convenience.</div>
+  </div>
+  <div class="page-num">Page 12</div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════
+     PAGE 13 — RESULTS: CONFIGURATOR
+════════════════════════════════════════════ -->
+<div class="page">
+  <div class="header-rule"><span>Porsche – Premium Automotive Web Application</span><span>Web Programming Lab Mini Project</span></div>
+  <div class="page-title">Results &amp; Discussion – Car Configurator</div>
+
+  <p>The configurator (<code>configurator.php</code>) divides the viewport into two panels: a large car-image stage on the left, and a configuration panel on the right. Clicking a colour swatch immediately swaps the car image and updates the colour name tag. Users can save the configuration to their "My Builds" list.</p>
+
+  <div class="screenshot-box">
+    <div class="ss-label">Figure 7 – Configurator (Default View)</div>
+    <div style="height:95mm; background:#111; display:flex; align-items:center; justify-content:center; color:#444; font-style:italic;">
+      [ Screenshot: configurator.php – car displayed with default colour, swatches visible on right panel ]
+    </div>
+    <div class="ss-caption">Full-viewport configurator — car stage left, colour/spec panel right. Active swatch highlighted in Porsche red.</div>
+  </div>
+
+  <div class="screenshot-box" style="margin-top:5mm;">
+    <div class="ss-label">Figure 8 – My Builds Page</div>
+    <div style="height:40mm; background:#111; display:flex; align-items:center; justify-content:center; color:#444; font-style:italic;">
+      [ Screenshot: my_builds.php – saved configuration cards ]
+    </div>
+    <div class="ss-caption">Saved configurations displayed as cards with selected colour swatch, model name and spec summary.</div>
+  </div>
+  <div class="page-num">Page 13</div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════
+     PAGE 14 — RESULTS: TEST DRIVE BOOKING
+════════════════════════════════════════════ -->
+<div class="page">
+  <div class="header-rule"><span>Porsche – Premium Automotive Web Application</span><span>Web Programming Lab Mini Project</span></div>
+  <div class="page-title">Results &amp; Discussion – Test Drive Booking &amp; Management</div>
+
+  <p>Users can book a test drive via <code>book_test_drive.php</code>. The phone field enforces international-format entry and validates the subscriber-digit count based on the detected country code. A Google Maps embed displays the Porsche Museum, Stuttgart. Bookings can be viewed, edited, and cancelled on <code>manage_test_drives.php</code>.</p>
+
+  <div class="screenshot-box">
+    <div class="ss-label">Figure 9 – Book Test Drive Form</div>
+    <div style="height:85mm; background:#111; display:flex; align-items:center; justify-content:center; color:#444; font-style:italic;">
+      [ Screenshot: book_test_drive.php – dark-themed form with phone hint and map below ]
+    </div>
+    <div class="ss-caption">Premium booking form — dark inputs with red focus, model dropdown, international phone field, date picker, and Google Maps.</div>
+  </div>
+
+  <div class="screenshot-box" style="margin-top:5mm;">
+    <div class="ss-label">Figure 10 – Manage Test Drives</div>
+    <div style="height:45mm; background:#111; display:flex; align-items:center; justify-content:center; color:#444; font-style:italic;">
+      [ Screenshot: manage_test_drives.php – dark table listing all user bookings with Edit/Cancel actions ]
+    </div>
+    <div class="ss-caption">Test drive management page listing all bookings; Edit navigates to prefilled form, Cancel uses a confirm dialog.</div>
+  </div>
+  <div class="page-num">Page 14</div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════
+     PAGE 15 — CONCLUSION & FUTURE SCOPE
+════════════════════════════════════════════ -->
+<div class="page">
+  <div class="header-rule"><span>Porsche – Premium Automotive Web Application</span><span>Web Programming Lab Mini Project</span></div>
+  <div class="page-title">Conclusion &amp; Future Scope</div>
+
+  <div class="section-heading">Conclusion</div>
+  <p>
+    The Porsche Premium Automotive Web Application successfully demonstrates the integration of modern PHP back-end development with a polished, premium front-end design. All project objectives were achieved:
+  </p>
+  <ul>
+    <li><strong>Security:</strong> Bcrypt password hashing, PDO prepared statements, HTML output escaping, and session-based access control protect the application against common web vulnerabilities (XSS, SQL injection, session hijacking).</li>
+    <li><strong>Functionality:</strong> Full CRUD for both car configurations and test-drive bookings is implemented with clean user feedback and data persistence.</li>
+    <li><strong>User Experience:</strong> The dark, cinematic design language — combined with micro-animations, an auto-hiding navbar, real-time AJAX filtering, and thoughtful form validation — delivers a premium feel rarely seen in academic projects.</li>
+    <li><strong>Code Quality:</strong> PHP includes for shared components (header/footer), a single PDO connection file (<code>db.php</code>), and consistent CSS class naming conventions ensure the codebase is maintainable and extensible.</li>
+  </ul>
+  <p>
+    The project gave all four team members hands-on experience with the complete web development lifecycle — from database design and back-end routing to front-end UI polish and client-side scripting. It reinforces that building a professional-grade web application requires equal attention to aesthetics, security, and architecture.
+  </p>
+
+  <div class="section-heading">Future Scope</div>
+  <ul>
+    <li><strong>Payment Integration:</strong> Integrate a sandbox payment gateway (Razorpay / Stripe) to simulate vehicle reservation deposits.</li>
+    <li><strong>Admin Dashboard:</strong> A separate admin portal to manage all users, bookings, and car inventory with charts and analytics.</li>
+    <li><strong>REST API:</strong> Expose the back-end as a JSON REST API to support a future React/Vue.js front-end.</li>
+    <li><strong>Email Notifications:</strong> Use PHPMailer to send booking confirmation and reminder emails.</li>
+    <li><strong>Progressive Web App (PWA):</strong> Add a service worker and manifest to enable offline browsing and home-screen installation on mobile devices.</li>
+    <li><strong>Multi-language Support:</strong> Internationalise the UI (English / Hindi / German) to broaden accessibility.</li>
+    <li><strong>Car Comparison Tool:</strong> Allow users to select two models side-by-side and compare specifications in a table.</li>
+  </ul>
+  <div class="page-num">Page 15</div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════
+     PAGE 16 — REFERENCES & OTHER DETAILS
+════════════════════════════════════════════ -->
+<div class="page">
+  <div class="header-rule"><span>Porsche – Premium Automotive Web Application</span><span>Web Programming Lab Mini Project</span></div>
+  <div class="page-title">References &amp; Other Details</div>
+
+  <div class="section-heading">References</div>
+  <ol style="line-height:2;">
+    <li>PHP Official Documentation — <em>php.net/docs</em></li>
+    <li>MySQL 8.0 Reference Manual — <em>dev.mysql.com/doc</em></li>
+    <li>MDN Web Docs – HTML, CSS &amp; JavaScript — <em>developer.mozilla.org</em></li>
+    <li>W3Schools PHP Tutorial — <em>w3schools.com/php</em></li>
+    <li>PDO Documentation, PHP Manual — <em>php.net/manual/en/book.pdo.php</em></li>
+    <li>Google Maps Embed API — <em>developers.google.com/maps/documentation/embed</em></li>
+    <li>Google Fonts (Bebas Neue, Barlow Condensed, Inter) — <em>fonts.google.com</em></li>
+    <li>ITU-T E.164 – International Telephone Numbering Plan — <em>itu.int</em></li>
+    <li>OWASP Top 10 – Web Application Security Risks — <em>owasp.org/www-project-top-ten</em></li>
+    <li>Porsche AG Official Website (Design Inspiration) — <em>porsche.com</em></li>
+  </ol>
+
+  <div class="section-heading">Other Details</div>
+  <table class="flow-table" style="margin-top:3mm;">
+    <tr><td style="width:35%;"><strong>Project Type</strong></td><td>Web Programming Lab Mini Project (Semester IV)</td></tr>
+    <tr><td><strong>Department</strong></td><td>Department of Information Technology</td></tr>
+    <tr><td><strong>Academic Year</strong></td><td>2025 – 2026</td></tr>
+    <tr><td><strong>Server Environment</strong></td><td>XAMPP 8.x (Apache 2.4 + PHP 8.x + MySQL 8.x) on Windows</td></tr>
+    <tr><td><strong>Browser Tested</strong></td><td>Google Chrome 124+, Mozilla Firefox 125+, Microsoft Edge 124+</td></tr>
+    <tr><td><strong>Lines of Code (approx.)</strong></td><td>PHP: ~900 · CSS: ~630 · JavaScript: ~350 · SQL: ~80</td></tr>
+    <tr><td><strong>Total Files</strong></td><td>18 PHP files, 1 CSS file, 1 SQL file, supporting assets</td></tr>
+    <tr><td><strong>Group Members</strong></td><td>Raj, Deepansh, Kapish, Aditya</td></tr>
+  </table>
+
+  <div class="section-heading" style="margin-top:6mm;">Declaration</div>
+  <p>
+    We hereby declare that this mini-project entitled <strong>"Porsche – Premium Automotive Web Application"</strong> is our own original work submitted for the partial fulfillment of the Web Programming Laboratory mini-project component. All references have been cited appropriately.
+  </p>
+
+  <table style="width:100%; margin-top:12mm; border:none; text-align:center; font-size:10.5pt;">
+    <tr>
+      <td style="padding:8mm; border:none;">________________________<br><strong>Raj</strong></td>
+      <td style="padding:8mm; border:none;">________________________<br><strong>Deepansh</strong></td>
+      <td style="padding:8mm; border:none;">________________________<br><strong>Kapish</strong></td>
+      <td style="padding:8mm; border:none;">________________________<br><strong>Aditya</strong></td>
+    </tr>
+  </table>
+  <div class="page-num">Page 16</div>
+</div>
+
+</body>
+</html>
